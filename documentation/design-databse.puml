@@ -24,9 +24,9 @@ entity Kost {
     * id: string(255) <<PK>>
     ---
     * name: string(255)
-    * image: string(255)
     * price: number
     * location: string(255)
+    image: string(255)
     ---
     * owner_id: string(255) <<FK>>
 }
