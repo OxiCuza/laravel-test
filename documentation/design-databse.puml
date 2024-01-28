@@ -1,0 +1,55 @@
+@startuml
+
+entity Role {
+    * id: string(255) <<PK>>
+    ---
+    * name: string(255)
+}
+
+entity User {
+    * id: string(255) <<PK>>
+    ---
+    * name: string(255)
+    * email: string(255)
+    * password: string(255)
+    * credit: number
+    gender: enum
+    birth_date: date
+    phone: number
+    ---
+    * role_id: string <<FK>>
+}
+
+entity Kost {
+    * id: string(255) <<PK>>
+    ---
+    * name: string(255)
+    * image: string(255)
+    * price: number
+    * location: string(255)
+    ---
+    * owner_id: string(255) <<FK>>
+}
+
+entity Kost_Detail {
+    * id: string(255) <<PK>>
+    ---
+    * name: string(255)
+}
+
+entity Kost_Discussion {
+    * id: string(255) <<PK>>
+    ---
+    * message: text
+    ---
+    * kost_id: string(255) <<FK>>
+    * user_id: string(255) <<FK>>
+}
+
+Role ||--|{ User
+User ||--o{ Kost
+Kost ||--|{ Kost_Detail
+Kost ||--o{ Kost_Discussion
+User ||--o{ Kost_Discussion
+
+@enduml
