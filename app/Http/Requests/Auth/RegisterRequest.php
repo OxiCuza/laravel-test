@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\Role;
 use App\Traits\FailValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
@@ -54,10 +55,10 @@ class RegisterRequest extends FormRequest
     {
         $credit;
         switch ($roleId) {
-            case 1:
+            case Role::PREMIUM:
                 $credit = 40;
                 break;
-            case 3:
+            case Role::REGULAR:
                 $credit = 20;
                 break;
             default:
