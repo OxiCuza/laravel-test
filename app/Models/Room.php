@@ -20,7 +20,7 @@ class Room extends Model
         'location',
         'price',
         'owner_id',
-        'image'
+        'image',
     ];
 
     public function owner(): BelongsTo
