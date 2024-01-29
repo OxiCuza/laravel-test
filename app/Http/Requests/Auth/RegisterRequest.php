@@ -51,9 +51,9 @@ class RegisterRequest extends FormRequest
         ]);
     }
 
-    public function getCredit($roleId): NULL|int
+    public function getCredit($roleId): ?int
     {
-        $credit;
+
         switch ($roleId) {
             case Role::PREMIUM:
                 $credit = 40;

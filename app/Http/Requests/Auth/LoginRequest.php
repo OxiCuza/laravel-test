@@ -3,10 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Traits\FailValidationTrait;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rules\Password;
 
 class LoginRequest extends FormRequest

@@ -1,0 +1,12 @@
+{
+    "exclude": [
+        "bootstrap",
+        "documentation",
+        "public",
+        "resources",
+        "storage",
+        "tests",
+        "node_modules",
+        "vendor"
+    ]
+}
