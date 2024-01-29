@@ -28,9 +28,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
     Route::middleware('auth:sanctum')->prefix('rooms')->name('rooms.')->group(function () {
         Route::get('/', [RoomController::class, 'index'])->name('index');
-        Route::post('/', [RoomController::class, 'store'])->name('store');
         Route::get('/{id}', [RoomController::class, 'show'])->name('show');
-        Route::put('/{id}', [RoomController::class, 'update'])->name('update');
-        Route::delete('/{id}', [RoomController::class, 'destroy'])->name('destroy');
+
+        Route::middleware('owner')->group(function () {
+            Route::post('/', [RoomController::class, 'store'])->name('store');
+            Route::put('/{id}', [RoomController::class, 'update'])->name('update');
+            Route::delete('/{id}', [RoomController::class, 'destroy'])->name('destroy');
+        });
     });
 });
