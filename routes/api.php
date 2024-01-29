@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\RoomController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::prefix('v1')->name('v1.')->group(function () {
 
     Route::prefix('auth')->name('auth.')->group(function () {
@@ -28,5 +24,13 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         });
+    });
+
+    Route::middleware('auth:sanctum')->prefix('rooms')->name('rooms.')->group(function () {
+        Route::get('/', [RoomController::class, 'index'])->name('index');
+        Route::post('/', [RoomController::class, 'store'])->name('store');
+        Route::get('/{id}', [RoomController::class, 'show'])->name('show');
+        Route::put('/{id}', [RoomController::class, 'update'])->name('update');
+        Route::delete('/{id}', [RoomController::class, 'destroy'])->name('destroy');
     });
 });
