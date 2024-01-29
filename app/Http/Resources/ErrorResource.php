@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceResponse;
 
@@ -12,7 +11,8 @@ class ErrorResource extends JsonResource
 
     public static $wrap = null;
 
-    public function __construct($resource, $statusCode = 400) {
+    public function __construct($resource, $statusCode = 400)
+    {
         parent::__construct($resource);
         $this->statusCode = $statusCode;
     }
