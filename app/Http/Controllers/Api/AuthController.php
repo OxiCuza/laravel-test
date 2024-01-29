@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\ErrorResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -13,14 +15,9 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): JsonResource
+    public function login(LoginRequest $request): JsonResource
     {
-        // TODO : CREATE FILE REQUEST
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
+        $credentials = $request->only('email', 'password');
         if (! Auth::attempt($credentials)) {
             $res = [
                 'status' => false,
@@ -36,23 +33,17 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register(Request $request): JsonResource
+    public function register(RegisterRequest $request): JsonResource
     {
-        // TODO : CREATE FILE REQUEST
-        $credentials = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', 'min:8'],
-            'role_id' => ['required'],
-        ]);
+        $data = $request->all();
 
         $user = User::create([
             'id' => Str::uuid(),
-            'name' => $credentials['name'],
-            'email' => $credentials['email'],
-            'password' => bcrypt($credentials['password']),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
             'credit' => 0,
-            'role_id' => $credentials['role_id'],
+            'role_id' => $data['role_id'],
         ]);
 
         return (new UserResource(resource: $user, message: 'OK!'))->additional([
