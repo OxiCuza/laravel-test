@@ -14,7 +14,7 @@ class RoomController extends Controller
 {
     public function index(Request $request): RoomCollection
     {
-        $room = Room::paginate(2);
+        $room = Room::with('details')->paginate(5);
 
         return new RoomCollection($room);
     }
@@ -26,10 +26,13 @@ class RoomController extends Controller
             'price' => 'required',
             'location' => 'required',
             'owner_id' => 'required',
+            'details' => 'required|array|min:1',
+            'details.*.name' => 'required',
         ]);
 
         try {
             $room = Room::create($data);
+            $room->details()->createMany($data['details']);
 
             return response()->api(true, 'OK!', new RoomResource($room));
         } catch (\Throwable $e) {
@@ -45,7 +48,7 @@ class RoomController extends Controller
     public function show(Request $request, $id)
     {
         try {
-            $room = Room::with('owner')->find($id);
+            $room = Room::with(['owner', 'details'])->find($id);
 
             return response()->api(true, 'OK!', new RoomResource($room));
         } catch (\Throwable $e) {
@@ -64,11 +67,18 @@ class RoomController extends Controller
             'name' => 'required',
             'price' => 'required',
             'location' => 'required',
+            'details' => 'nullable|array|min:1',
+            'details.*.id' => 'required|exists:room_details,id',
+            'details.*.name' => 'required',
         ]);
 
         try {
             $room = Room::with('owner')->findOrFail($id);
             $room->update($data);
+
+            if ($data['details']) {
+                $room->details()->updateMany($data['details']);
+            }
 
             return response()->api(true, 'OK!', new RoomResource($room));
         } catch (\Throwable $e) {
