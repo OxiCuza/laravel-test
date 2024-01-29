@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('credit')->nullable();
+            $table->integer('credit')->default(0);
             $table->enum('gender', ['MALE', 'FEMALE'])->nullable();
             $table->string('phone')->nullable();
             $table->date('birth_date')->nullable();

@@ -33,4 +33,9 @@ class Room extends Model
     {
         return $this->hasMany(RoomDetail::class);
     }
+
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(RoomDiscussion::class);
+    }
 }

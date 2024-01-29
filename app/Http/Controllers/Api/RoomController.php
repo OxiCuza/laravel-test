@@ -48,7 +48,7 @@ class RoomController extends Controller
     public function show(Request $request, $id)
     {
         try {
-            $room = Room::with(['owner', 'details'])->find($id);
+            $room = Room::with(['owner', 'details', 'discussions'])->find($id);
 
             return response()->api(true, 'OK!', new RoomResource($room));
         } catch (\Throwable $e) {
