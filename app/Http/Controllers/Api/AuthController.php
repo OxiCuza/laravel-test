@@ -8,14 +8,14 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\ErrorResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request): JsonResource
+    public function login(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
         if (! Auth::attempt($credentials)) {
@@ -23,17 +23,17 @@ class AuthController extends Controller
                 'status' => false,
                 'message' => 'Invalid credentials',
             ];
+
             return new ErrorResource($res, 401);
         }
 
         $user = Auth::user();
+        $data = (new UserResource($user, $user->createToken('auth_token')->plainTextToken));
 
-        return (new UserResource(resource: $user, message: 'OK!'))->additional([
-            'token' => $user->createToken('auth_token')->plainTextToken,
-        ]);
+        return response()->api(true, 'OK!', $data);
     }
 
-    public function register(RegisterRequest $request): JsonResource
+    public function register(RegisterRequest $request): JsonResponse
     {
         $data = $request->all();
 
@@ -42,19 +42,19 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'credit' => 0,
+            'credit' => $data['credit'],
             'role_id' => $data['role_id'],
         ]);
 
-        return (new UserResource(resource: $user, message: 'OK!'))->additional([
-            'token' => $user->createToken('auth_token')->plainTextToken,
-        ]);
+        $data = (new UserResource($user, $user->createToken('auth_token')->plainTextToken));
+
+        return response()->api(true, 'OK!', $data);
     }
 
-    public function logout(Request $request): JsonResource
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->tokens()->delete();
 
-        return new UserResource($request->user(), message: 'OK!');
+        return response()->api(true, 'OK!');
     }
 }
