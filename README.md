@@ -20,7 +20,9 @@
 
 ## Documentation
 
-- [Design Database](https://github.com/OxiCuza/laravel-test/tree/master/documentation) or inside folder documentation
+- [Design Database](https://github.com/OxiCuza/laravel-test/tree/master/documentation)
+- [Postman Collection](https://github.com/OxiCuza/laravel-test/tree/master/documentation)
+- All Documentation in folder /documentation/*
 
 
 ## Requirement 
@@ -140,7 +142,7 @@ If you need run scheduled command for recharge credit user :
 - Code: `400`
 ```
 {
-    "success": false,
+    "status": false,
     "message": "Validation errors",
     "data": {
         "password": [
