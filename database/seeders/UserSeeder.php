@@ -13,13 +13,12 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // TODO : CHANGE TO FACTORY
         DB::table('users')->insert([
             [
                 'id' => Str::uuid(),
                 'name' => 'user premium',
                 'email' => 'premium@localhost.com',
-                'password' => bcrypt('premium'),
+                'password' => bcrypt('passwordpassword'),
                 'credit' => 40,
                 'role_id' => 1,
                 'created_at' => now(),
@@ -29,8 +28,8 @@ class UserSeeder extends Seeder
                 'id' => Str::uuid(),
                 'name' => 'user owner',
                 'email' => 'owner@localhost.com',
-                'password' => bcrypt('owner'),
-                'credit' => null,
+                'password' => bcrypt('passwordpassword'),
+                'credit' => 0,
                 'role_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -39,7 +38,7 @@ class UserSeeder extends Seeder
                 'id' => Str::uuid(),
                 'name' => 'user regular',
                 'email' => 'regular@localhost.com',
-                'password' => bcrypt('regular'),
+                'password' => bcrypt('passwordpassword'),
                 'credit' => 20,
                 'role_id' => 3,
                 'created_at' => now(),
