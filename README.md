@@ -1,66 +1,570 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Laravel MamiKos Test API
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+![Logo](https://guidelines.mamikos.com/images/logo/mamikos-logo.png)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Authentication
+  - Register as regular user, premium user, owner.
+  - Login as regular user, premium user, owner.
+  - Logout
+- CRUD Kost / Room.
+- Search Kost / Room by : name, location and price
+- Sorting Kost / Room by price : asc / des
+- Create and view room discussion. 
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Documentation
 
-## Laravel Sponsors
+- [Design Database](https://github.com/OxiCuza/laravel-test/tree/master/documentation)
+- [Postman Collection](https://github.com/OxiCuza/laravel-test/tree/master/documentation)
+- All Documentation in folder /documentation/*
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Premium Partners
+## Requirement 
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```
+- PHP 8.1 or newest
+- MySQL or MariaDB
+- Composer 2.1
+```
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Run Locally
 
-## Code of Conduct
+Clone the project
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+  git clone https://github.com/OxiCuza/laravel-test.git
+```
 
-## Security Vulnerabilities
+Go to the project directory
+```bash
+  cd laravel-test
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Install composer dependencies
+```bash
+  composer install
+```
 
-## License
+Copy **.env.example** as **.env**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+  cp .env.example .env // or just copy manually via file manager
+```
+
+Edit database configuration in file **.env**
+
+```bash
+  DB_CONNECTION=mysql
+  DB_HOST=fill_with_your_db_host
+  DB_PORT=fill_with_your_db_port
+  DB_DATABASE=fill_with_your_name_db
+  DB_USERNAME=fill_with_your_username_db
+  DB_PASSWORD=fill_with_your_password_db
+```
+
+Generate Key PHP
+
+```bash
+  php artisan key:generate
+```
+
+Run migration and seeding
+
+```bash
+  php artisan migrate --seed
+```
+
+You will have data master of role
+
+| id | name     |
+| :-------- | :------- |
+| `1`      | `PREMIUM` |
+| `2`      | `OWNER` |
+| `3`      | `REGULAR` |
+
+Run Laravel
+
+```bash
+  php artisan serve
+```
+
+If you need run scheduled command for recharge credit user :
+
+```bash
+  php artisan app:credit-recharge
+```
+**OR**
+
+```bash
+  php artisan scheduled:test
+```
+
+## API Reference
+
+### Register
+
+```http
+  POST /api/v1/auth/register
+```
+
+**Body Parameters :**
+| parameter | type     | example                |
+| :-------- | :------- | :------------------------- |
+| `name` | `string` | oxicusa |
+| `email` | `email` | oxicusa@gmail.com |
+| `password` | `string` | passwordpassword |
+| `password_confirmation` | `string` | passwordpassword |
+| `role` | `string` | 1 (as user PREMIUM) |
+
+**Example Responses :**
+
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": {
+        "id": "9b34d729-a8e2-4d25-b208-712e028653bc",
+        "name": "oxicusa",
+        "email": "oxicusa@gmail.com",
+        "credit": 40
+    }
+}
+```
+
+- Code: `400`
+```
+{
+    "status": false,
+    "message": "Validation errors",
+    "data": {
+        "password": [
+            "The password field confirmation does not match."
+        ]
+    }
+}
+```
+
+### Login
+
+```http
+  POST /api/v1/auth/login
+```
+
+**Body Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `email`      | `email` | oxicusa@gmail.com |
+| `password`      | `string` | passwordpassword |
+
+**Example Responses :**
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": {
+        "id": "9b3386b6-16b8-4cb5-86c3-0714cec438ff",
+        "token": "34|tuhcXt6KiDnkJKPfjpckeaQABSa50kRSTxalolbsac482a8b",
+        "name": "oxicusa",
+        "email": "oxicusa@gmail.com",
+        "credit": 40
+    }
+}
+```
+
+- Code: `400`
+```
+{
+    "status": false,
+    "message": "Invalid credentials",
+    "data": null
+}
+```
+
+### Logout
+
+```http
+  POST /api/v1/auth/logout
+```
+
+**Header Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `Authorization`      | `string` | Bearer 33cQEHAWhmp3sZxJnszgdbAK4lVoF8AvGLpFZL0kewbfb204cd |
+
+**Example Responses :**
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": null
+}
+```
+
+### Create Kost (only Owner)
+
+```http
+  POST /api/v1/rooms
+```
+
+**Header Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `Authorization`      | `string` | Bearer 33cQEHAWhmp3sZxJnszgdbAK4lVoF8AvGLpFZL0kewbfb204cd |
+
+**Body Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | room 1 |
+| `price`      | `integer` | 1000 |
+| `location`      | `string` | Jawa Timur |
+| `details`      | `array of object` | [ { "name": "K. Mandi Dalam" } ] |
+
+**Example Responses :**
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": {
+        "id": "9b3691fb-01e6-4ca1-ab09-acdbcdf75dbe",
+        "name": "room 5",
+        "location": "malang",
+        "price": 2000,
+        "created_at": "2024-01-30T03:53:16.000000Z"
+    }
+}
+```
+
+- Code: `400`
+```
+{
+    "success": false,
+    "message": "Validation errors",
+    "data": {
+        "details": [
+            "The details field is required."
+        ]
+    }
+}
+```
+
+- Code: `401`
+```
+{
+    "status": false,
+    "message": "Unauthorized",
+    "data": null
+}
+```
+
+### Update Kost (only Owner)
+
+```http
+  PUT /api/v1/rooms
+```
+
+**Header Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `Authorization`      | `string` | Bearer 33cQEHAWhmp3sZxJnszgdbAK4lVoF8AvGLpFZL0kewbfb204cd |
+
+**Body Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | room 2 |
+| `price`      | `number` | 15000 |
+| `location`      | `string` | Jawa Tengah |
+| `details`      | `array of object` | [ { "id": "9b3691fb-04ec-4cde-980a-d16c1a6272f1", "name": "K. Mandi Dalam" } ] |
+
+**Example Responses :**
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": {
+        "id": "9b3691fb-01e6-4ca1-ab09-acdbcdf75dbe",
+        "name": "room 2",
+        "location": "Jawa Tengah",
+        "price": 15000,
+        "created_at": "2024-01-30T03:53:16.000000Z",
+    }
+}
+```
+
+- Code: `400`
+```
+{
+    "success": false,
+    "message": "Validation errors",
+    "data": {
+        "name": [
+            "attribute name is required"
+        ]
+    }
+}
+```
+
+### Delete Kost (only Owner)
+
+```http
+  DELETE /api/v1/rooms/{id}
+```
+
+**Header Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `Authorization`      | `string` | Bearer 33cQEHAWhmp3sZxJnszgdbAK4lVoF8AvGLpFZL0kewbfb204cd |
+
+**Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | 9b3691fb-01e6-4ca1-ab09-acdbcdf75dbe |
+
+**Example Responses :**
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": null
+}
+```
+
+- Code: `404`
+```
+{
+    "status": false,
+    "message": "Kost / Room Not Found",
+    "data": null
+}
+```
+
+### Show All Kost (By Owner ID / User Premium and Regular)
+
+```http
+  GET /api/v1/rooms
+```
+
+**Header Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `Authorization`      | `string` | Bearer 33cQEHAWhmp3sZxJnszgdbAK4lVoF8AvGLpFZL0kewbfb204cd |
+
+**Query Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | room 5 |
+| `location`      | `string` | pasuruan |
+| `price`      | `integer` | 2000 |
+| `sort`      | `string` | desc |
+
+**Example Responses :**
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": [
+        {
+            "id": "9b34e0d8-dbd0-4534-8df9-916e50175e82",
+            "name": "room 5",
+            "location": "pasuruan",
+            "price": 2000,
+            "created_at": "2024-01-29T07:42:09.000000Z",
+            "facilities": [
+                {
+                    "id": "91d6acb2-be88-11ee-96c0-0242ac120003",
+                    "name": "Kulkas"
+                },
+                {
+                    "id": "91d6b6b6-be88-11ee-96c0-0242ac120003",
+                    "name": "K. Mandi Dalam"
+                }
+            ]
+        }
+    ],
+    "links": {
+        "first": "http://example.test/api/v1/rooms?page=1",
+        "last": "http://example.test/api/v1/rooms?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "http://example.test/api/v1/rooms?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": null,
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "path": "http://example.test/api/v1/rooms",
+        "per_page": 10,
+        "to": 7,
+        "total": 7
+    }
+}
+```
+
+### Show Detail Kost (By Owner ID / User Premium and Regular)
+
+```http
+  GET /api/v1/rooms/{id}
+```
+
+**Header Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `Authorization`      | `string` | Bearer 33cQEHAWhmp3sZxJnszgdbAK4lVoF8AvGLpFZL0kewbfb204cd |
+
+**Header Parameters :**
+| name | type     | example                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | 9b34e0d8-dbd0-4534-8df9-916e50175e82 |
+
+**Example Responses :**
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": {
+        "id": "9b34e0d8-dbd0-4534-8df9-916e50175e82",
+        "name": "room 5",
+        "location": "pasuruan",
+        "price": 2000,
+        "created_at": "2024-01-29T07:42:09.000000Z",
+        "owner": {
+            "id": "9b34cf89-a473-4098-abad-84297a159fe7",
+            "name": "oxicusa",
+            "email": "goxicuza@gmail.com",
+            "credit": 0
+        },
+        "facilities": [
+            {
+                "id": "91d6acb2-be88-11ee-96c0-0242ac120003",
+                "name": "Kulkas"
+            },
+            {
+                "id": "91d6b6b6-be88-11ee-96c0-0242ac120003",
+                "name": "K. Mandi Dalam"
+            }
+        ],
+        "discussions": []
+    }
+}
+```
+
+- Code: `403`
+```
+{
+    "status": false,
+    "message": "You are not the owner of this room.",
+    "data": null
+}
+```
+
+### Ask / Discussion About Kost / Room
+
+```http
+  POST /api/v1/rooms/{id}/discussions
+```
+
+**Header Parameters :**
+| name | type     | description                       |
+| :-------- | :------- | :-------------------------------- |
+| `Authorization`      | `string` | Bearer 33cQEHAWhmp3sZxJnszgdbAK4lVoF8AvGLpFZL0kewbfb204cd |
+
+**Parameters :**
+| name | type     | description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | 9b34e0d8-dbd0-4534-8df9-916e50175e82 |
+
+**Body Parameters :**
+| name | type     | description                       |
+| :-------- | :------- | :-------------------------------- |
+| `message`      | `string` | coba message dari user |
+
+**Example Responses :**
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": {
+        "id": "9b3564c9-76e9-46da-a31b-15ad0b997878",
+        "message": "coba message dari user",
+        "created_at": "2024-01-29T13:51:04.000000Z"
+    }
+}
+```
+
+### List Discussion By Kost ID
+
+```http
+  GET /api/v1/rooms/{id}/discussions
+```
+
+**Header Parameters :**
+| name | type     | description                       |
+| :-------- | :------- | :-------------------------------- |
+| `Authorization`      | `string` | Bearer 33cQEHAWhmp3sZxJnszgdbAK4lVoF8AvGLpFZL0kewbfb204cd |
+
+**Parameters :**
+| name | type     | description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | 9b34e0d8-dbd0-4534-8df9-916e50175e82 |
+
+**Example Responses :**
+- Code: `200`
+```
+{
+    "status": true,
+    "message": "OK!",
+    "data": [
+        {
+            "id": "9b3564c9-76e9-46da-a31b-15ad0b997878",
+            "message": "coba message dari user",
+            "created_at": "2024-01-29T13:51:04.000000Z",
+            "user": {
+                "id": "9b34cf89-a473-4098-abad-84297a159fe7",
+                "name": "oxicusa",
+                "email": "oxicusa@gmail.com",
+                "credit": 40
+            }
+        }
+    ]
+}
+```
+
+## Feedback
+
+If you have any feedback, please reach out to me at oxicusa@gmail.com
+
+
+## Authors
+
+- Oxicusa Gugi Housman. - [@OxiCuza](https://github.com/OxiCuza)
