@@ -44,4 +44,9 @@ class Room extends Model
     {
         $query->where('owner_id', $userId);
     }
+
+    public function scopeSortByPrice(Builder $query, $order = 'asc'): void
+    {
+        $query->orderBy('price', $order);
+    }
 }
