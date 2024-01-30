@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Room\DiscussionRequest;
 use App\Http\Resources\RoomDiscussionCollection;
 use App\Http\Resources\RoomDiscussionResource;
+use App\Models\Role;
 use App\Models\RoomDiscussion;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,9 +33,12 @@ class RoomDiscussionController extends Controller
 
         try {
             $discussion = RoomDiscussion::create($data);
-            $user->update([
-                'credit' => $user->credit - 5,
-            ]);
+
+            if ($user->role_id != Role::OWNER) {
+                $user->update([
+                    'credit' => $user->credit - 5,
+                ]);
+            }
 
             return response()->api(true, 'OK!', new RoomDiscussionResource($discussion), 201);
         } catch (\Throwable $e) {
