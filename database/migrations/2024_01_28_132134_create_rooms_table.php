@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('location');
             $table->integer('price');
-            $table->string('image')->nullable();
             $table->foreignUuid('owner_id')
                 ->constrained('users')
                 ->cascadeOnDelete();

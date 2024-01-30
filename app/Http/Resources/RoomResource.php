@@ -19,7 +19,6 @@ class RoomResource extends JsonResource
             'name' => $this->name,
             'location' => $this->location,
             'price' => $this->price,
-            'image' => $this->image,
             'created_at' => $this->created_at,
             'owner' => new UserResource($this->whenLoaded('owner')),
             'facilities' => new RoomDetailCollection($this->whenLoaded('details')),

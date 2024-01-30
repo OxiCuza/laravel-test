@@ -15,41 +15,42 @@ entity User {
     * credit: number
     gender: enum
     birth_date: date
-    phone: number
+    phone: string
     ---
     * role_id: string <<FK>>
 }
 
-entity Kost {
+entity Room {
     * id: string(255) <<PK>>
     ---
     * name: string(255)
     * price: number
     * location: string(255)
-    image: string(255)
     ---
     * owner_id: string(255) <<FK>>
 }
 
-entity Kost_Detail {
+entity Room_Detail {
     * id: string(255) <<PK>>
     ---
     * name: string(255)
+    ---
+    * room_id: string(255) <<FK>>
 }
 
-entity Kost_Discussion {
+entity Room_Discussion {
     * id: string(255) <<PK>>
     ---
     * message: text
     ---
-    * kost_id: string(255) <<FK>>
+    * room_id: string(255) <<FK>>
     * user_id: string(255) <<FK>>
 }
 
 Role ||--|{ User
-User ||--o{ Kost
-Kost ||--|{ Kost_Detail
-Kost ||--o{ Kost_Discussion
-User ||--o{ Kost_Discussion
+User ||--o{ Room
+Room ||--|{ Room_Detail
+Room ||--o{ Room_Discussion
+User ||--o{ Room_Discussion
 
 @enduml
