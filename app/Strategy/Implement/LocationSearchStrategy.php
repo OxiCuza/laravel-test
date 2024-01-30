@@ -9,6 +9,6 @@ class LocationSearchStrategy implements SearchStrategyInterface
 {
     public function search(Builder $query, $value): void
     {
-        $query->where('location', 'like', '%' . $value . '%');
+        $query->where('location', 'like', '%'.$value.'%');
     }
 }
