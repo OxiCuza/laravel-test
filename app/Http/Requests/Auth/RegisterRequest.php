@@ -62,7 +62,7 @@ class RegisterRequest extends FormRequest
                 $credit = 20;
                 break;
             default:
-                $credit = null;
+                $credit = 0;
                 break;
         }
 
