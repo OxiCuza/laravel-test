@@ -10,6 +10,9 @@ use App\Http\Resources\RoomCollection;
 use App\Http\Resources\RoomResource;
 use App\Models\Role;
 use App\Models\Room;
+use App\Strategy\Implement\LocationSearchStrategy;
+use App\Strategy\Implement\NameSearchStrategy;
+use App\Strategy\Implement\PriceSearchStrategy;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,6 +26,22 @@ class RoomController extends Controller
 
         if ($user->role_id == Role::OWNER) {
             $query->ownedBy($user->id);
+        }
+
+        $searchStrategy = [
+            'name' => new NameSearchStrategy(),
+            'price' => new PriceSearchStrategy(),
+            'location' => new LocationSearchStrategy(),
+        ];
+
+        foreach ($searchStrategy as $param => $strategy) {
+            if ($request->filled($param)) {
+                $strategy->search($query, $request->input($param));
+            }
+        }
+
+        if ($request->filled('sort')) {
+            $query->sortByPrice($request->input('sort'));
         }
 
         $room = $query->paginate(10);
