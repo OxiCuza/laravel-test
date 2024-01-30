@@ -4,6 +4,7 @@ namespace App\Http\Requests\Room;
 
 use App\Traits\FailValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreRequest extends FormRequest
 {
@@ -35,9 +36,18 @@ class StoreRequest extends FormRequest
             'name' => 'required',
             'price' => 'required',
             'location' => 'required',
-            'owner_id' => 'required',
             'details' => 'required|array|min:1',
             'details.*.name' => 'required',
         ];
+    }
+
+    /**
+     * Handle a passed validation attempt.
+     */
+    protected function passedValidation(): void
+    {
+        $this->merge([
+            'owner_id' => Auth::id(),
+        ]);
     }
 }

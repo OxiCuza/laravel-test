@@ -50,7 +50,7 @@ class RoomController extends Controller
         return new RoomCollection($room);
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         $data = $request->only([
             'name',

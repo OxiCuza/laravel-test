@@ -36,7 +36,7 @@ class UpdateRequest extends FormRequest
             'price' => 'required',
             'location' => 'required',
             'details' => 'nullable|array|min:1',
-            'details.*.id' => 'required|exists:room_details,id',
+            'details.*.id' => 'required',
             'details.*.name' => 'required',
         ];
     }
