@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Room\StoreRequest;
 use App\Http\Requests\Room\UpdateRequest;
-use App\Http\Resources\ErrorResource;
 use App\Http\Resources\RoomCollection;
 use App\Http\Resources\RoomResource;
 use App\Models\Role;
@@ -14,8 +13,10 @@ use App\Strategy\Implement\LocationSearchStrategy;
 use App\Strategy\Implement\NameSearchStrategy;
 use App\Strategy\Implement\PriceSearchStrategy;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
 {
@@ -49,7 +50,7 @@ class RoomController extends Controller
         return new RoomCollection($room);
     }
 
-    public function store(StoreRequest $request): JsonResponse
+    public function store(StoreRequest $request)
     {
         $data = $request->only([
             'name',
@@ -59,18 +60,19 @@ class RoomController extends Controller
             'details',
         ]);
 
+        DB::beginTransaction();
         try {
             $room = Room::create($data);
             $room->details()->createMany($data['details']);
 
+            DB::commit();
+
             return response()->api(true, 'OK!', new RoomResource($room));
         } catch (\Throwable $e) {
-            $res = [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
 
-            return response()->api(true, 'OK!', new ErrorResource($res, 500));
+            DB::rollback();
+
+            return response()->api(false, $e->getMessage(), null, 500);
         }
     }
 
@@ -83,8 +85,10 @@ class RoomController extends Controller
 
             return response()->api(true, 'OK!', new RoomResource($room));
         } catch (AuthorizationException $e) {
+
             return response()->api(false, $e->getMessage(), null, 403);
         } catch (\Throwable $e) {
+
             return response()->api(false, $e->getMessage(), null, 500);
         }
     }
@@ -98,6 +102,7 @@ class RoomController extends Controller
             'details',
         ]);
 
+        DB::beginTransaction();
         try {
             $room = Room::with('owner')->findOrFail($id);
 
@@ -106,13 +111,23 @@ class RoomController extends Controller
             $room->update($data);
 
             if ($data['details']) {
-                $room->details()->updateMany($data['details']);
+                foreach ($data['details'] as $detailData) {
+                    $room->details()->updateOrCreate(
+                        ['room_id' => $room->id, 'id' => $detailData['id']],
+                        $detailData
+                    );
+                }
             }
+
+            DB::commit();
 
             return response()->api(true, 'OK!', new RoomResource($room));
         } catch (AuthorizationException $e) {
+
             return response()->api(false, $e->getMessage(), null, 403);
         } catch (\Throwable $e) {
+            DB::rollback();
+
             return response()->api(false, $e->getMessage(), null, 500);
         }
     }
@@ -128,8 +143,13 @@ class RoomController extends Controller
 
             return response()->api(true, 'OK!');
         } catch (AuthorizationException $e) {
+
             return response()->api(false, $e->getMessage(), null, 403);
+        } catch (ModelNotFoundException $e) {
+
+            return response()->api(false, 'Kost / Room Not Found', null, 404);
         } catch (\Throwable $e) {
+
             return response()->api(false, $e->getMessage(), null, 500);
         }
     }

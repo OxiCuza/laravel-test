@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Resources\ErrorResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -15,16 +14,12 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->only('email', 'password');
         if (! Auth::attempt($credentials)) {
-            $res = [
-                'status' => false,
-                'message' => 'Invalid credentials',
-            ];
 
-            return new ErrorResource($res, 401);
+            return response()->api(false, 'Invalid credentials', null, 400);
         }
 
         $user = Auth::user();
