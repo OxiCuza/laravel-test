@@ -43,7 +43,7 @@ class AuthController extends Controller
 
         $data = (new UserResource($user, $user->createToken('auth_token')->plainTextToken));
 
-        return response()->api(true, 'OK!', $data);
+        return response()->api(true, 'OK!', $data, 201);
     }
 
     public function logout(Request $request): JsonResponse

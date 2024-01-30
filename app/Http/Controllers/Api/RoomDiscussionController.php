@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ErrorResource;
+use App\Http\Requests\Room\DiscussionRequest;
 use App\Http\Resources\RoomDiscussionCollection;
 use App\Http\Resources\RoomDiscussionResource;
-use App\Models\Room;
 use App\Models\RoomDiscussion;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,28 +21,25 @@ class RoomDiscussionController extends Controller
         return response()->api(true, 'OK!', new RoomDiscussionCollection($discussions));
     }
 
-    public function store(Request $request, $roomId): JsonResponse
+    public function store(DiscussionRequest $request, $roomId): JsonResponse
     {
         $user = $request->user();
         $data = [
             'message' => $request->get('message'),
             'user_id' => $user->id,
+            'room_id' => $roomId,
         ];
 
         try {
-            $discussion = Room::find($roomId)->discussions()->create($data);
+            $discussion = RoomDiscussion::create($data);
             $user->update([
                 'credit' => $user->credit - 5,
             ]);
 
             return response()->api(true, 'OK!', new RoomDiscussionResource($discussion), 201);
         } catch (\Throwable $e) {
-            $res = [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
 
-            return response()->api(true, 'OK!', new ErrorResource($res, 500), 500);
+            return response()->api(false, $e->getMessage(), null, 500);
         }
     }
 }

@@ -67,7 +67,7 @@ class RoomController extends Controller
 
             DB::commit();
 
-            return response()->api(true, 'OK!', new RoomResource($room));
+            return response()->api(true, 'OK!', new RoomResource($room), 201);
         } catch (\Throwable $e) {
 
             DB::rollback();
@@ -110,7 +110,7 @@ class RoomController extends Controller
 
             $room->update($data);
 
-            if ($data['details']) {
+            if (isset($data['details'])) {
                 foreach ($data['details'] as $detailData) {
                     $room->details()->updateOrCreate(
                         ['room_id' => $room->id, 'id' => $detailData['id']],
