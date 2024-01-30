@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RoomController;
+use App\Http\Controllers\Api\RoomDiscussionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,10 +21,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::prefix('auth')->name('auth.')->group(function () {
         Route::post('login', [AuthController::class, 'login'])->name('login');
         Route::post('register', [AuthController::class, 'register'])->name('register');
-
-        Route::middleware('auth:sanctum')->group(function () {
-            Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-        });
+        Route::post('logout', [AuthController::class, 'logout'])
+            ->middleware('auth:sanctum')
+            ->name('logout');
     });
 
     Route::middleware('auth:sanctum')->prefix('rooms')->name('rooms.')->group(function () {
@@ -35,5 +35,10 @@ Route::prefix('v1')->name('v1.')->group(function () {
             Route::put('/{id}', [RoomController::class, 'update'])->name('update');
             Route::delete('/{id}', [RoomController::class, 'destroy'])->name('destroy');
         });
+
+        Route::get('/{id}/discussions', [RoomDiscussionController::class, 'show'])->name('show');
+        Route::post('/{id}/discussions', [RoomDiscussionController::class, 'store'])
+            ->middleware('credit.enough')
+            ->name('store');
     });
 });
